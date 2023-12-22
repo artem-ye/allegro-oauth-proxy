@@ -1,16 +1,21 @@
-async function homeRoute(fastify, options) {
-	fastify.get('/', async (request, reply) => {
-		return { hello: 'world!!!' };
-	});
-}
+const appRoutes = require('./appRoutes');
+const oauthRoutes = require('../oauthApi/router');
 
-async function aboutRoute(fastify, options) {
-	fastify.get('/about', async (request, reply) => {
-		return { about: 'us' };
-	});
-}
+const adaptRoutes = (routes, options = {}) => {
+	const reducer = (acc, [key, router]) =>
+		Object.assign(acc, {
+			[key]: {
+				router,
+				options,
+			},
+		});
 
-module.exports = {
-	homeRoute,
-	aboutRoute,
+	// named | default module.exports
+	const exportedRoutes = typeof routes === 'object' ? routes : { routes };
+	return Object.entries(exportedRoutes).reduce(reducer, {});
 };
+
+const routes = {};
+Object.assign(routes, adaptRoutes(appRoutes));
+Object.assign(routes, adaptRoutes(oauthRoutes, { prefix: 'oauth' }));
+module.exports = routes;
