@@ -1,10 +1,16 @@
-const oauthController = require('../oauthApi/controller');
+async function homeRoute(fastify, options) {
+	fastify.get('/', async (request, reply) => {
+		return { hello: 'world!!!' };
+	});
+}
 
-const routes = {
-	'/': () => ({
-		message: 'It works',
-	}),
-	'/oauth': (req) => oauthController(req),
+async function aboutRoute(fastify, options) {
+	fastify.get('/about', async (request, reply) => {
+		return { about: 'us' };
+	});
+}
+
+module.exports = {
+	homeRoute,
+	aboutRoute,
 };
-
-module.exports = routes;
