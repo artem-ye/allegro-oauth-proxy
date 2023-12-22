@@ -1,0 +1,19 @@
+{
+  "name": "allegro-auth-proxy-server",
+  "version": "1.0.0",
+  "description": "allegro auth proxy",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint .",
+    "dev": "NODE_ENV='development' nodemon index.js"
+  },
+  "keywords": [
+    "allegro"
+  ],
+  "author": "ay <shlemafona@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "nodemon": "^3.0.2"
+  }
+}
