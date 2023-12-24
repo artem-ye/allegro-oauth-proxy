@@ -1,4 +1,4 @@
-const appRoutes = require('./appRoutes');
+const appRoutes = require('../staticPages/routes');
 const oauthRoutes = require('../oauthApi/router');
 
 const adaptRoutes = (routes, options = {}) => {
