@@ -5,18 +5,52 @@ async function oauthRouter(fastify, options) {
 	fastify.addHook('preHandler', authPreHandler);
 
 	// request new token pair
-	fastify.post('/device', async (request, reply) => {
-		return { oauth: 'POST REQUEST DEVICE TOKEN' };
+	fastify.route({
+		method: 'POST',
+		url: '/device',
+		schema: {
+			querystring: {
+				type: 'object',
+				properties: {
+					client_id: { type: 'string' },
+				},
+				required: ['client_id'],
+			},
+		},
+		handler: async (request, reply) => {
+			const params = request.query;
+			return { oauth: 'POST REQUEST DEVICE TOKEN', params };
+		},
 	});
 
 	// retrieve/refresh tokens pair
-	fastify.post('/token', async (request, reply) => {
-		return { oauth: 'POST RETRIEVE TOKENS' };
+	fastify.route({
+		method: 'POST',
+		url: '/token',
+		schema: {
+			querystring: {
+				type: 'object',
+				properties: {
+					grant_type: { type: 'string' },
+					// retrieve params
+					device_code: { type: 'string' },
+					// refresh params
+					refresh_token: { type: 'string' },
+					redirect_uri: { type: 'string' },
+				},
+				required: ['grant_type'],
+			},
+		},
+		handler: async (request, reply) => {
+			const params = request.query;
+			return { oauth: 'POST RETRIEVE TOKENS', params };
+		},
 	});
 
 	// get cached tokens
 	fastify.get('/token', async (request, reply) => {
-		return { oauth: 'GET DEVICE' };
+		const params = equest.query;
+		return { oauth: 'GET DEVICE', params };
 	});
 }
 
