@@ -3,7 +3,8 @@ const config = require('../../config');
 const routes = require('./routes');
 
 const PORT = config.http.port;
-const LOGGING = process.env.NODE_ENV === 'development' ? true : false;
+// const LOGGING = process.env.NODE_ENV === 'development' ? true : false;
+const LOGGING = false;
 
 module.exports = async () =>
 	server({
