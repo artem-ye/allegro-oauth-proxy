@@ -1,11 +1,8 @@
 const { parseAuthHeader, authorize } = require('./auth');
 
-async function oauthRouter(fastify, options) {
-	fastify.decorateRequest('user', '');
-	fastify.addHook('preHandler', authPreHandler);
-
+const routes = [
 	// request new token pair
-	fastify.route({
+	{
 		method: 'POST',
 		url: '/device',
 		schema: {
@@ -21,10 +18,9 @@ async function oauthRouter(fastify, options) {
 			const params = request.query;
 			return { oauth: 'POST REQUEST DEVICE TOKEN', params };
 		},
-	});
-
+	},
 	// retrieve/refresh tokens pair
-	fastify.route({
+	{
 		method: 'POST',
 		url: '/token',
 		schema: {
@@ -45,14 +41,17 @@ async function oauthRouter(fastify, options) {
 			const params = request.query;
 			return { oauth: 'POST RETRIEVE TOKENS', params };
 		},
-	});
-
+	},
 	// get cached tokens
-	fastify.get('/token', async (request, reply) => {
-		const params = equest.query;
-		return { oauth: 'GET DEVICE', params };
-	});
-}
+	{
+		method: 'GET',
+		url: '/token',
+		handler: async (request, reply) => {
+			const params = request.query;
+			return { oauth: 'GET DEVICE', params };
+		},
+	},
+];
 
 async function authPreHandler(req, res) {
 	const credentials = parseAuthHeader(req.headers.authorization);
@@ -65,6 +64,15 @@ async function authPreHandler(req, res) {
 	}
 
 	req.user = credentials.client_id;
+}
+
+async function oauthRouter(fastify, options) {
+	fastify.decorateRequest('user', '');
+	fastify.addHook('preHandler', authPreHandler);
+
+	for (const route of routes) {
+		fastify.route(route);
+	}
 }
 
 module.exports = oauthRouter;
