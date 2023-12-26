@@ -1,4 +1,4 @@
-const { parseAuthHeader, authorize } = require('./auth');
+const { parseAuthHeader, authorize } = require('./api/auth');
 
 const routes = [
 	// request new token pair
