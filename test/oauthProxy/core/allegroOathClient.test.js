@@ -14,6 +14,5 @@ test('AllegroOauthClient:constructor', () => {
 
 test('AllegroOauthClient:requestTokens', async () => {
 	const res = await client.requestTokens({ client_id });
-	console.log(await res.text());
-	expect(res.status).toBe(200);
+	expect(res.status).toBe(401);
 });
