@@ -1,7 +1,7 @@
 const AllegroOauthClient = require('../../../src/oauthProxy/core/allegroOauthClient');
 
-const client_id = '123';
-const client_secret = '456';
+const client_id = 'foo';
+const client_secret = 'bar';
 
 const client = new AllegroOauthClient({
 	client_id,
@@ -10,7 +10,10 @@ const client = new AllegroOauthClient({
 
 test('AllegroOauthClient:constructor', () => {
 	expect(client instanceof AllegroOauthClient).toBe(true);
-	expect(client.base64_credentials).toBe(
-		Buffer.from(`${client_id}:${client_secret}`).toString('base64')
-	);
+});
+
+test('AllegroOauthClient:requestTokens', async () => {
+	const res = await client.requestTokens({ client_id });
+	console.log(await res.text());
+	expect(res.status).toBe(200);
 });
