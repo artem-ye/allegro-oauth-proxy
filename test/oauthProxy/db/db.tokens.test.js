@@ -18,13 +18,17 @@ describe('db user model | saveTokens/getTokens', () => {
 
 	test('saveToken works', async () => {
 		const usr = models.User(testUser);
-		await usr.saveTokens({
-			token: 'token',
-			refresh_token: 'refresh_token',
-			expires: 1000,
-		});
 
-		// Can override without error
+		// saveToken: works
+		await usr
+			.saveTokens({
+				token: 'token',
+				refresh_token: 'refresh_token',
+				expires: 1000,
+			})
+			.catch((err) => expect(err).toBe('error'));
+
+		// saveToken: tokens override without error
 		const res = await usr
 			.saveTokens({
 				token: 'token',
@@ -38,14 +42,17 @@ describe('db user model | saveTokens/getTokens', () => {
 		expect(updatedToken).not.toBeFalsy();
 		expect(updatedToken.user_id).toEqual(user_id);
 
-		// Get tokens works
+		// getTokens: works
 		const userToken = await models.User({ _id: usr._id }).getTokens();
 		expect(userToken).not.toBeNull();
 		expect(userToken.user_id).toEqual(usr._id);
 	});
 
-	test('saveToken save unknown user token throws', async () => {
-		const usr = models.User({ ...testUser, client_id: 'fuck' });
+	test('saveToken: save unknown user token throws', async () => {
+		const usr = models.User({
+			client_id: 'not',
+			client_secret: 'exists',
+		});
 		const res = await usr
 			.saveTokens({
 				token: 'token',
