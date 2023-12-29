@@ -21,6 +21,7 @@ describe('db user model | saveTokens/getTokens', () => {
 		await usr.saveTokens({
 			token: 'token',
 			refresh_token: 'refresh_token',
+			expires: 1000,
 		});
 
 		// Can override without error
@@ -28,6 +29,7 @@ describe('db user model | saveTokens/getTokens', () => {
 			.saveTokens({
 				token: 'token',
 				refresh_token: 'refresh_token',
+				expires: 1000,
 			})
 			.catch((err) => expect(err).toBe('error'));
 

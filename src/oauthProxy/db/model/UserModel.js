@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 const TokenModel = require('./TokenModel');
 
-// const TokenModel = mongoose.model('Token');
-
 const UserSchema = new mongoose.Schema({
-	client_id: { type: String, required: true, unique: true, dropDups: true },
+	client_id: { type: String, required: true, unique: true, index: true },
 	client_secret: { type: String, required: true },
 });
 
@@ -18,8 +16,8 @@ UserSchema.method({
 				user_id: this._id,
 				token,
 				refresh_token,
-				// created: Date.now(),
-				// expires: Date.now + expires,
+				created: Date.now(),
+				expires: Date.now() + expires,
 			},
 			{ upsert: true }
 		);

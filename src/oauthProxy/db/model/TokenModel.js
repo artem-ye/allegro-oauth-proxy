@@ -10,8 +10,8 @@ const TokenSchema = mongoose.Schema({
 	},
 	token: { type: String, required: true },
 	refresh_token: { type: String, required: true },
-	created: Date,
-	expires: Date,
+	created: BigInt,
+	expires: BigInt,
 });
 
 const TokenModel = mongoose.model('Tokens', TokenSchema);
