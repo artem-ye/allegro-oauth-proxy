@@ -6,7 +6,6 @@ const TokenSchema = mongoose.Schema({
 		ref: 'Users',
 		unique: true,
 		index: 1,
-		// dropDups: true,
 		required: true,
 	},
 	token: { type: String, required: true },
