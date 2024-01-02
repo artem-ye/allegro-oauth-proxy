@@ -1,15 +1,10 @@
-const mongo_url =
-	process.env.mongo_url ||
-	`mongodb://localhost:27017/Tokens` + process.env.NODE_ENV !== 'production'
-		? 'Test'
-		: '';
-
 const config = {
 	http: {
-		port: process.env.http_port || 3000,
+		port: process.env.HTTP_PORT || 3000,
 	},
 	mongo: {
-		url: process.env.MONGO_URL || `mongodb://localhost:27017/Tokens`,
+		url: process.env.MONGO_URL,
+		test_url: 'mongodb://localhost:27027/Token_Test',
 	},
 };
 

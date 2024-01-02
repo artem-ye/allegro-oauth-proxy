@@ -1,53 +1,57 @@
+const config = require('../../../config');
 const { db, close, models } = require('../../../src/oauthProxy/db/db');
 const { User: UserModel, Token: TokenModel } = models;
 
-const notThrows = (err) => expect(err).toBe('error');
+const CONN_STR = config.mongo.test_url;
 
 test('db not throws', async () => {
 	try {
-		await db();
+		await db(CONN_STR);
 	} catch (err) {
 		expect(err).toBe('error');
 	}
 });
 
 describe('db models', () => {
+	const CLIENT_ID = 'test_user';
+	const TOKEN = 'test_token';
+
 	const deleteMock = async () => {
-		await UserModel.deleteOne({ client_id: 'foo' });
-		await TokenModel.deleteOne({ token: 'token' });
+		await UserModel.deleteOne({ client_id: CLIENT_ID });
+		await TokenModel.deleteOne({ token: TOKEN });
 	};
 	beforeEach(deleteMock);
 	afterEach(deleteMock);
 
 	test('db UserModel works', async () => {
 		const user = await models.User.create({
-			client_id: 'foo',
+			client_id: CLIENT_ID,
 			client_secret: 'bar',
-		}).catch(notThrows);
+		}).catch((err) => expect(err).toBe('error'));
 
 		// duplicated records throws
 		await models.User.create({
-			client_id: 'foo',
+			client_id: CLIENT_ID,
 			client_secret: 'bar',
 		}).catch((err) => expect(err).not.toBe(undefined));
 	});
 
 	test('db TokenModel works', async () => {
 		const user = await models.User.create({
-			client_id: 'foo',
+			client_id: CLIENT_ID,
 			client_secret: 'bar',
-		}).catch(notThrows);
+		}).catch((err) => expect(err).toBe('error'));
 
 		await TokenModel.create({
 			user_id: user._id,
-			token: 'token',
+			token: TOKEN,
 			refresh_token: 'refresh_token',
-		}).catch(notThrows);
+		}).catch((err) => expect(err).toBe('error'));
 
 		// duplicated records
 		await TokenModel.create({
 			user_id: user._id,
-			token: 'token',
+			token: TOKEN,
 			refresh_token: 'refresh_token',
 		}).catch((err) => expect(err).not.toBeNull());
 	});

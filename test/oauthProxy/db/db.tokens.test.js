@@ -1,5 +1,8 @@
+const config = require('../../../config');
 const { db, close, models } = require('../../../src/oauthProxy/db/db');
 const { User: UserModel, Token: TokenModel } = models;
+
+const CONN_STR = config.mongo.test_url;
 
 const testUser = {
 	client_id: 'foo',
@@ -13,7 +16,7 @@ const testToken = {
 };
 
 beforeAll(async () => {
-	await db();
+	await db(CONN_STR);
 	await models.User.deleteMany(testUser);
 	await models.Token.deleteMany({ token: testToken.token });
 
