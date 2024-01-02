@@ -1,51 +1,55 @@
 const { db, close, models } = require('../../../src/oauthProxy/db/db');
 const { User: UserModel, Token: TokenModel } = models;
 
-beforeAll(async () => await db());
-afterAll(async () => await close());
+const testUser = {
+	client_id: 'foo',
+	client_secret: 'bar',
+};
+
+const testToken = {
+	token: 'token',
+	refresh_token: 'refresh_token',
+	expires: 1000,
+};
+
+beforeAll(async () => {
+	await db();
+	await models.User.deleteMany(testUser);
+	await models.Token.deleteMany({ token: testToken.token });
+
+	await models.User.create(testUser);
+});
+
+afterAll(async () => {
+	await models.Token.deleteMany({ token: testToken.token });
+	await models.User.deleteMany(testUser);
+	await close();
+});
 
 describe('db user model | saveTokens/getTokens', () => {
-	const testUser = {
-		client_id: 'foo',
-		client_secret: 'bar',
-	};
-
-	beforeAll(async () => await models.User.create(testUser));
-	afterAll(async () => {
-		await models.User.deleteOne(testUser);
-		await models.Token.deleteMany({ token: 'token' });
-	});
-
-	test('saveToken works', async () => {
-		const usr = models.User(testUser);
+	test('saveToken/getTokens works', async () => {
+		const user = models.User(testUser);
 
 		// saveToken: works
-		await usr
-			.saveTokens({
-				token: 'token',
-				refresh_token: 'refresh_token',
-				expires: 1000,
-			})
+		await user
+			.saveTokens(testToken)
 			.catch((err) => expect(err).toBe('error'));
 
-		// saveToken: tokens override without error
-		const res = await usr
-			.saveTokens({
-				token: 'token',
-				refresh_token: 'refresh_token',
-				expires: 1000,
-			})
-			.catch((err) => expect(err).toBe('error'));
-
-		const { user_id } = await models.User.find(testUser);
-		const updatedToken = await models.Token.find({ user_id });
+		const updatedToken = await models.Token.findOne({
+			user_id: user._id,
+		});
 		expect(updatedToken).not.toBeFalsy();
-		expect(updatedToken.user_id).toEqual(user_id);
+		expect(updatedToken.user_id).toEqual(user._id);
+
+		// Can update existing token
+		const res = await user
+			.saveTokens(testToken)
+			.catch((err) => expect(err).toBe('error'));
 
 		// getTokens: works
-		const userToken = await models.User({ _id: usr._id }).getTokens();
+		const userToken = await user.getTokens();
 		expect(userToken).not.toBeNull();
-		expect(userToken.user_id).toEqual(usr._id);
+		expect(userToken.user_id).toEqual(user._id);
 	});
 
 	test('saveToken: save unknown user token throws', async () => {
@@ -53,7 +57,7 @@ describe('db user model | saveTokens/getTokens', () => {
 			client_id: 'not',
 			client_secret: 'exists',
 		});
-		const res = await usr
+		await usr
 			.saveTokens({
 				token: 'token',
 				refresh_token: 'refresh_token',
