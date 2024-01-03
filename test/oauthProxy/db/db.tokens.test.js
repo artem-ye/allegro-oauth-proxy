@@ -2,7 +2,7 @@ const config = require('../../../config');
 const { db, close, models } = require('../../../src/oauthProxy/db/db');
 const { User: UserModel, Token: TokenModel } = models;
 
-const CONN_STR = config.mongo.test_url;
+const CONN_STR = config.mongo.url + '_Test';
 
 const testUser = {
 	client_id: 'foo',

@@ -4,8 +4,8 @@
   "description": "allegro auth proxy",
   "main": "index.js",
   "scripts": {
-    "test": "MONGO_URL='mongodb://localhost:27027/Token_Test' jest .",
-    "dev": "NODE_ENV='development' MONGO_URL='mongodb://localhost:27027/Token' nodemon index.js"
+    "test": "jest .",
+    "dev": "NODE_ENV='development' nodemon index.js"
   },
   "keywords": [
     "allegro"
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@fastify/formbody": "^7.4.0",
+    "dotenv": "^16.3.1",
     "fastify": "^4.25.1",
     "mongoose": "^8.0.3"
   }

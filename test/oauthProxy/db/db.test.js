@@ -1,12 +1,15 @@
+const { default: mongoose } = require('mongoose');
 const config = require('../../../config');
 const { db, close, models } = require('../../../src/oauthProxy/db/db');
 const { User: UserModel, Token: TokenModel } = models;
 
-const CONN_STR = config.mongo.test_url;
+const CONN_STR = config.mongo.url + '_Test';
 
 test('db not throws', async () => {
+	let mongo;
+
 	try {
-		await db(CONN_STR);
+		mongo = await db(CONN_STR);
 	} catch (err) {
 		expect(err).toBe('error');
 	}

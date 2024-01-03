@@ -2,10 +2,15 @@ const config = require('../../../config');
 const OauthProxy = require('../../../src/oauthProxy/core/oauthProxy');
 const { db, close, models } = require('../../../src/oauthProxy/db/db');
 
-const testUserData = { client_id: 'test_user', client_secret: 'test_pass' };
+const testUserData = {
+	client_id: 'test_user_oauth_proxy_test',
+	client_secret: 'test_pass',
+};
+
+const MONGO_URL = config.mongo.url + '_Test';
 
 beforeAll(async () => {
-	await db(config.mongo.test_url);
+	await db(MONGO_URL);
 	await models.User.deleteOne(testUserData);
 });
 
