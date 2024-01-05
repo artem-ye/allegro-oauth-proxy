@@ -1,4 +1,4 @@
-const oauthDb = require('../core/oauthDb');
+const oauthDb = require('../db/oauthDb');
 
 const parseAuthHeader = (authorization) => {
 	if (!authorization) return;

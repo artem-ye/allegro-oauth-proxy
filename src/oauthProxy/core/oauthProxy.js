@@ -1,6 +1,6 @@
 const UserModel = require('../db/model/UserModel');
 const AllegroOauthClient = require('./allegroOauthClient');
-const oauthDb = require('./oauthDb');
+const oauthDb = require('../db/oauthDb');
 
 STATUS_OK = 200;
 
