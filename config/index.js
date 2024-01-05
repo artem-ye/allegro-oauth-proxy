@@ -7,6 +7,9 @@ const config = {
 	mongo: {
 		url: process.env.MONGO_URL,
 	},
+	api: {
+		root_token: process.env.ROOT_TOKEN,
+	},
 };
 
 module.exports = config;
