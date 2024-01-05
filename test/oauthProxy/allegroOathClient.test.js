@@ -1,4 +1,4 @@
-const AllegroOauthClient = require('../../../src/oauthProxy/core/allegroOauthClient');
+const AllegroOauthClient = require('../../src/oauthProxy/core/allegroOauthClient');
 
 const client_id = 'foo';
 const client_secret = 'bar';
