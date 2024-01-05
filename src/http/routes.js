@@ -1,5 +1,5 @@
 const appRoutes = require('../staticPages/routes');
-const oauthRoutes = require('../oauthProxy/router');
+const oauthRoutes = require('../oauthProxy/api/router');
 
 const adaptRoutes = (routes, options = {}) => {
 	const reducer = (acc, [key, router]) =>

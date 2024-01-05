@@ -1,5 +1,5 @@
-const authHelper = require('./api/auth');
-const handlers = require('./api/controller');
+const authHelper = require('./auth');
+const handlers = require('./controller');
 
 const routes = [
 	// request new token pair
