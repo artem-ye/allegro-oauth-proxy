@@ -30,41 +30,48 @@ afterAll(async () => {
 });
 
 describe('db user model | saveTokens/getTokens', () => {
-	test('saveToken/getTokens works', async () => {
-		const user = models.User(testUser);
+	test('saveTokens works', async () => {
+		// saveTokens
+		const _user = await models.User.findOne(testUser);
+		expect(_user.client_id).toEqual(testUser.client_id);
 
-		// saveToken: works
-		await user
-			.saveTokens(testToken)
-			.catch((err) => expect(err).toBe('error'));
+		let savedToken = await models.User(testUser).saveTokens(testToken);
+		expect(savedToken.access_token).toEqual(testToken.access_token);
+		expect(savedToken.user_id).toEqual(_user._id);
 
-		const updatedToken = await models.Token.findOne({
-			user_id: user._id,
+		let dbToken = await models.Token.findOne({ user_id: _user._id });
+		expect(dbToken.user_id).toEqual(_user._id);
+		expect(dbToken.access_token).toEqual(testToken.access_token);
+
+		dbToken = await models.Token.find({
+			access_token: testToken.access_token,
 		});
-		expect(updatedToken).not.toBeFalsy();
-		expect(updatedToken.user_id).toEqual(user._id);
+		expect(dbToken.length).toEqual(1);
 
-		// Can update existing token
-		const res = await user
-			.saveTokens(testToken)
-			.catch((err) => expect(err).toBe('error'));
+		await models.Token.deleteMany(testToken);
+		savedToken = await _user.saveTokens(testToken);
+		expect(savedToken.access_token).toEqual(testToken.access_token);
+		expect(savedToken.user_id).toEqual(_user._id);
 
-		// getTokens: works
-		const userToken = await user.getTokens();
-		expect(userToken).not.toBeNull();
-		expect(userToken.user_id).toEqual(user._id);
-	});
+		savedToken = await _user.saveTokens(testToken);
+		expect(savedToken.access_token).toEqual(testToken.access_token);
+		expect(savedToken.user_id).toEqual(_user._id);
 
-	test('saveToken: save unknown user token throws', async () => {
-		const usr = models.User({
-			client_id: 'not',
-			client_secret: 'exists',
-		});
-		await usr
-			.saveTokens({
-				token: 'token',
-				refresh_token: 'refresh_token',
+		// getTokens
+		dbToken = await models.User(testUser).getTokens();
+		expect(dbToken.user_id).toEqual(_user._id);
+		expect(dbToken.access_token).toEqual(testToken.access_token);
+
+		dbToken = await _user.getTokens();
+		expect(dbToken.user_id).toEqual(_user._id);
+		expect(dbToken.access_token).toEqual(testToken.access_token);
+
+		dbToken = await models
+			.User({
+				client_id: 'not',
+				client_secret: 'exists',
 			})
-			.catch((err) => expect(err).not.toBeNull());
+			.getTokens();
+		expect(dbToken).toBeFalsy();
 	});
 });

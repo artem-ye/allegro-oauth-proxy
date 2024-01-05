@@ -26,12 +26,15 @@ async function retrieveTokens({ client_id, client_secret, device_code }) {
 
 	if (res?.status === STATUS_OK) {
 		const { access_token, refresh_token, expires_in } = res.data;
-		await oauthDb.saveTokens({
+
+		const dbRecord = await oauthDb.saveTokens({
 			...credentials,
 			access_token,
 			refresh_token,
 			expires_in,
 		});
+		if (!dbRecord) throw new Error('DB Error: Unable to store tokens');
+
 		return res.data;
 	}
 
@@ -46,12 +49,15 @@ async function refreshTokens({ client_id, client_secret, refresh_token }) {
 
 	if (res?.status === STATUS_OK) {
 		const { access_token, refresh_token, expires_in } = res.data;
-		await oauthDb.saveTokens({
+
+		const dbRecord = await oauthDb.saveTokens({
 			...credentials,
 			access_token,
 			refresh_token,
 			expires_in,
 		});
+		if (!dbRecord) throw new Error('DB Error: Unable to store tokens');
+
 		return res.data;
 	}
 

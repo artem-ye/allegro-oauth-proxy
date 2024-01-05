@@ -1,27 +1,5 @@
 const UserModel = require('../db/model/UserModel');
 
-const findUser = async (params) => {
-	const user = await UserModel.findOne(params);
-	if (!user) {
-		throw new Error(`User not exists: ${JSON.stringify({ ...params })}`);
-	}
-	return user;
-};
-
-// const user = async () => {
-// 	const dbUser = await UserModel.findOne(params);
-
-//     if (dbUser) return dbUser;
-
-//     return new Proxy({}, )
-// 	const notFound = () => new Error('User not found');
-
-// 	return {
-// 		saveTokens: !u ? notFound : u.saveTokens,
-// 		saveTokens: !u ? notFound : u.saveTokens,
-// 	};
-// };
-
 const oauthDb = {
 	userExists: async ({ client_id, client_secret }) =>
 		UserModel.exists({ client_id, client_secret }),
@@ -30,8 +8,7 @@ const oauthDb = {
 		UserModel.create({ client_id, client_secret }),
 
 	getTokens: async ({ client_id, client_secret }) => {
-		const user = await findUser({ client_id, client_secret });
-		return user.getTokens();
+		return UserModel({ client_id, client_secret }).getTokens();
 	},
 
 	saveTokens: async ({
@@ -41,8 +18,7 @@ const oauthDb = {
 		refresh_token,
 		expires_in,
 	}) => {
-		const user = await findUser({ client_id, client_secret });
-		return user.saveTokens({
+		return UserModel({ client_id, client_secret }).saveTokens({
 			access_token,
 			refresh_token,
 			expires_in,
