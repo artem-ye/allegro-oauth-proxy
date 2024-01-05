@@ -1,3 +1,5 @@
+const oauthDb = require('../core/oauthDb');
+
 const parseAuthHeader = (authorization) => {
 	if (!authorization) return;
 	if (!typeof authorization === 'string') return false;
@@ -14,11 +16,7 @@ const parseAuthHeader = (authorization) => {
 };
 
 const authorize = async ({ client_id, client_secret }) => {
-	if (client_id === 'key' && client_secret === 'val') {
-		return true;
-	}
-
-	return false;
+	return oauthDb.userExists({ client_id, client_secret });
 };
 
 module.exports = {

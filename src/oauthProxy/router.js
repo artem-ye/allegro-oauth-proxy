@@ -1,4 +1,5 @@
-const { parseAuthHeader, authorize } = require('./api/auth');
+const authHelper = require('./api/auth');
+const handlers = require('./api/controller');
 
 const routes = [
 	// request new token pair
@@ -14,10 +15,7 @@ const routes = [
 				required: ['client_id'],
 			},
 		},
-		handler: async (request, reply) => {
-			const params = request.query;
-			return { oauth: 'POST REQUEST DEVICE TOKEN', params };
-		},
+		handler: handlers.deviceHandler,
 	},
 	// retrieve/refresh tokens pair
 	{
@@ -37,37 +35,33 @@ const routes = [
 				required: ['grant_type'],
 			},
 		},
-		handler: async (request, reply) => {
-			const params = request.query;
-			return { oauth: 'POST RETRIEVE TOKENS', params };
-		},
+		handler: handlers.tokensHandler,
 	},
 	// get cached tokens
 	{
 		method: 'GET',
 		url: '/token',
-		handler: async (request, reply) => {
-			const params = request.query;
-			return { oauth: 'GET DEVICE', params };
-		},
+		handler: handlers.getTokensHandler,
 	},
 ];
 
 async function authPreHandler(req, res) {
-	const credentials = parseAuthHeader(req.headers.authorization);
+	const credentials = authHelper.parseAuthHeader(req.headers.authorization);
 	if (!credentials) {
 		return res.code(403).send({ error: 'Forbidden', credentials });
 	}
 
-	if (!(await authorize(credentials))) {
+	if (!(await authHelper.authorize(credentials))) {
 		return res.code(403).send({ error: 'Forbidden', credentials });
 	}
 
-	req.user = credentials.client_id;
+	req.client_id = credentials.client_id;
+	req.client_secret = credentials.client_secret;
 }
 
 async function oauthRouter(fastify, options) {
-	fastify.decorateRequest('user', '');
+	fastify.decorateRequest('client_id', '');
+	fastify.decorateRequest('client_secret', '');
 	fastify.addHook('preHandler', authPreHandler);
 
 	for (const route of routes) {

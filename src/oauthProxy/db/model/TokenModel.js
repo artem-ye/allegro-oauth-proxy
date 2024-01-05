@@ -8,10 +8,21 @@ const TokenSchema = mongoose.Schema({
 		index: 1,
 		required: true,
 	},
-	token: { type: String, required: true },
+	access_token: { type: String, required: true },
 	refresh_token: { type: String, required: true },
-	created: BigInt,
-	expires: BigInt,
+	created: Number,
+	expires: Number,
+});
+
+TokenSchema.method({
+	toViewObject: async function () {
+		const { access_token, refresh_token, expires } = this;
+		return {
+			access_token,
+			refresh_token,
+			expires_in: parseInt((expires - Date.now()) / 1000),
+		};
+	},
 });
 
 const TokenModel = mongoose.model('Tokens', TokenSchema);

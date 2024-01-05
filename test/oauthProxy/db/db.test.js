@@ -47,7 +47,7 @@ describe('db models', () => {
 
 		await TokenModel.create({
 			user_id: user._id,
-			token: TOKEN,
+			access_token: TOKEN,
 			refresh_token: 'refresh_token',
 		}).catch((err) => expect(err).toBe('error'));
 

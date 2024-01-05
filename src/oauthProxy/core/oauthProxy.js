@@ -1,69 +1,70 @@
 const UserModel = require('../db/model/UserModel');
 const AllegroOauthClient = require('./allegroOauthClient');
+const oauthDb = require('./oauthDb');
 
 STATUS_OK = 200;
 
-async function authorizedUser({ client_id, client_secret }) {
-	const user = await UserModel.findOne({ client_id, client_secret });
-	return !!user;
-}
+async function requestTokens({ client_id, client_secret }) {
+	const res = await AllegroOauthClient.withAuth({
+		client_id,
+		client_secret,
+	}).requestTokens({ client_id });
 
-async function createUser({ client_id, client_secret }) {
-	return UserModel.create({ client_id, client_secret });
-}
+	if (res?.status === STATUS_OK) {
+		return res.data;
+	}
 
-async function requestToken({ client_id, client_secret }) {
-	return AllegroOauthClient.requestToken({ client_id, client_secret });
+	return { error: res };
 }
 
 async function retrieveTokens({ client_id, client_secret, device_code }) {
-	const res = await AllegroOauthClient.retrieveTokens({
-		client_id,
-		client_secret,
+	const credentials = { client_id, client_secret };
+
+	const res = await AllegroOauthClient.withAuth(credentials).retrieveTokens({
 		device_code,
 	});
 
 	if (res?.status === STATUS_OK) {
-		// update db data
-		const { token, refresh_token, expires } = res.data;
-		await UserModel({ client_id, client_secret }).saveTokens({
-			token,
+		const { access_token, refresh_token, expires_in } = res.data;
+		await oauthDb.saveTokens({
+			...credentials,
+			access_token,
 			refresh_token,
-			expires,
+			expires_in,
 		});
+		return res.data;
 	}
 
-	return res;
+	return { error: res };
 }
 
 async function refreshTokens({ client_id, client_secret, refresh_token }) {
-	const res = await AllegroOauthClient.refreshTokens({
-		client_id,
-		client_secret,
+	const credentials = { client_id, client_secret };
+	const res = await AllegroOauthClient.withAuth(credentials).refreshTokens({
 		refresh_token,
 	});
 
 	if (res?.status === STATUS_OK) {
-		// update db data
-		const { token, refresh_token, expires } = res.data;
-		await UserModel({ client_id, client_secret }).saveTokens({
-			token,
+		const { access_token, refresh_token, expires_in } = res.data;
+		await oauthDb.saveTokens({
+			...credentials,
+			access_token,
 			refresh_token,
-			expires,
+			expires_in,
 		});
+		return res.data;
 	}
 
-	return res;
+	return { error: res };
 }
 
 async function getTokens({ client_id, client_secret }) {
-	return UserModel({ client_id, client_secret }).getTokens();
+	const tokens = await oauthDb.getTokens({ client_id, client_secret });
+	return tokens && tokens.toViewObject();
 }
 
 const OauthProxy = {
-	authorizedUser,
-	createUser,
-	requestToken,
+	requestTokens,
 	retrieveTokens,
 	refreshTokens,
 	getTokens,

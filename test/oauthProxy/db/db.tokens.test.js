@@ -10,9 +10,9 @@ const testUser = {
 };
 
 const testToken = {
-	token: 'token',
+	access_token: 'token',
 	refresh_token: 'refresh_token',
-	expires: 1000,
+	expires_in: 1000,
 };
 
 beforeAll(async () => {

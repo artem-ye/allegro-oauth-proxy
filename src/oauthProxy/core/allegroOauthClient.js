@@ -55,7 +55,7 @@ class AllegroOauthClient {
 		}).fetch;
 	}
 
-	static create({ client_id, client_secret }) {
+	static withAuth({ client_id, client_secret }) {
 		return new AllegroOauthClient({ client_id, client_secret });
 	}
 

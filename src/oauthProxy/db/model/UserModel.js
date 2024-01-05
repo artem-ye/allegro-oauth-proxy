@@ -11,17 +11,17 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.method({
-	saveTokens: async function ({ token, refresh_token, expires }) {
+	saveTokens: async function ({ access_token, refresh_token, expires_in }) {
 		return await TokenModel.findOneAndUpdate(
 			{
 				user_id: this._id,
 			},
 			{
 				user_id: this._id,
-				token,
+				access_token,
 				refresh_token,
 				created: Date.now(),
-				expires: Date.now() + expires,
+				expires: Date.now() + parseInt(expires_in) * 1000,
 			},
 			{ upsert: true, new: true }
 		);
