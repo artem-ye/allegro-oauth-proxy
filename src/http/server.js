@@ -1,6 +1,6 @@
 const Fastify = require('fastify');
 
-const server = async ({ port = 3000, routes = {}, enableLogging = false }) => {
+const server = async ({ port = 3000, routes = [], enableLogging = false }) => {
 	const fastify = Fastify({
 		logger: enableLogging,
 	});

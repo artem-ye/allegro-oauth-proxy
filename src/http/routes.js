@@ -6,8 +6,7 @@ const adaptRoutes = (routes, options = {}) => {
 	const reducer = (acc, [key, router]) => acc.concat({ router, options });
 
 	// named | default module.exports
-	const exportedRoutes =
-		typeof routes === 'object' ? routes : { [Math.random()]: routes };
+	const exportedRoutes = typeof routes === 'object' ? routes : { routes };
 	return Object.entries(exportedRoutes).reduce(reducer, []);
 };
 
