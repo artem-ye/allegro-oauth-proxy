@@ -3,11 +3,11 @@ const oauthRoutes = require('../oauthProxy/api/router');
 const oauthAdminRouter = require('../oauthProxy/adminApi/router');
 
 const adaptRoutes = (routes, options = {}) => {
-	const reducer = (acc, [key, router]) => acc.concat({ router, options });
-
 	// named | default module.exports
 	const exportedRoutes = typeof routes === 'object' ? routes : { routes };
-	return Object.entries(exportedRoutes).reduce(reducer, []);
+
+	const reducer = (acc, router) => (acc.push({ router, options }), acc);
+	return Object.values(exportedRoutes).reduce(reducer, []);
 };
 
 const routes = [];
