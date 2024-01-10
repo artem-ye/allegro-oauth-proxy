@@ -1,0 +1,10 @@
+node_modules
+db_data
+db_init
+Makefile
+Dockerfile
+test
+.env
+.dockerignore
+.git*
+compose.yaml

@@ -1,0 +1,28 @@
+version: '2'
+services:
+  oauth-proxy-app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://oauth-proxy-db/Token      
+      - HTTP_ADDRESS=0.0.0.0
+      #- ROOT_TOKEN=ROOT
+    depends_on:
+      - oauth-proxy-db
+
+  oauth-proxy-db:
+    image: "mongodb/mongodb-community-server:latest"
+    volumes:      
+      # Not works on MacOS
+      # - type: bind
+      #   source: ./db_data
+      #   target: /data
+      - type: volume
+        source: oauth-db-vol
+        target: /data/db
+
+volumes:
+  oauth-db-vol:
+    external: true
+
