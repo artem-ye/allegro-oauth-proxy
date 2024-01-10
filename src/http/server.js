@@ -1,6 +1,11 @@
 const Fastify = require('fastify');
 
-const server = async ({ port = 3000, routes = [], enableLogging = false }) => {
+const server = async ({
+	port = 3000,
+	address = 'localhost',
+	routes = [],
+	enableLogging = false,
+}) => {
 	const fastify = Fastify({
 		logger: enableLogging,
 	});
@@ -11,7 +16,7 @@ const server = async ({ port = 3000, routes = [], enableLogging = false }) => {
 		fastify.register(router, options);
 	}
 
-	return fastify.listen({ port });
+	return fastify.listen({ port, host: address });
 };
 
 module.exports = server;
