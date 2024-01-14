@@ -1,11 +1,11 @@
-async function homeRoute(fastify, options) {
-	fastify.get('/', async (request, reply) => {
+async function homeRoute(fastify) {
+	fastify.get('/', async () => {
 		return { hello: 'world!!!' };
 	});
 }
 
-async function aboutRoute(fastify, options) {
-	fastify.get('/about', async (request, reply) => {
+async function aboutRoute(fastify) {
+	fastify.get('/about', async () => {
 		return { about: 'us' };
 	});
 }

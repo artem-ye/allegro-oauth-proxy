@@ -1,4 +1,3 @@
-const { default: mongoose } = require('mongoose');
 const config = require('../../../config');
 const { db, close, models } = require('../../../src/oauthProxy/db/db');
 const { User: UserModel, Token: TokenModel } = models;
@@ -6,10 +5,8 @@ const { User: UserModel, Token: TokenModel } = models;
 const CONN_STR = config.mongo.url + '_Test';
 
 test('db not throws', async () => {
-	let mongo;
-
 	try {
-		mongo = await db(CONN_STR);
+		await db(CONN_STR);
 	} catch (err) {
 		expect(err).toBe('error');
 	}
@@ -27,7 +24,7 @@ describe('db models', () => {
 	afterEach(deleteMock);
 
 	test('db UserModel works', async () => {
-		const user = await models.User.create({
+		await models.User.create({
 			client_id: CLIENT_ID,
 			client_secret: 'bar',
 		}).catch((err) => expect(err).toBe('error'));

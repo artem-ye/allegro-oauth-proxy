@@ -1,7 +1,7 @@
 const UserModel = require('../db/model/UserModel');
 
 const adminApiHandlers = {
-	getUser: async function (req, res) {
+	getUser: async function (req) {
 		const params = req.query;
 		const paramsPersist = !!Object.keys(params).length;
 
@@ -11,7 +11,7 @@ const adminApiHandlers = {
 			return await UserModel.find({});
 		}
 	},
-	createUser: async function (req, res) {
+	createUser: async function (req) {
 		const params = req.body;
 		return await UserModel.create(params);
 	},

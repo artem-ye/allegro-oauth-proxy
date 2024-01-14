@@ -59,7 +59,7 @@ async function authPreHandler(req, res) {
 	req.client_secret = credentials.client_secret;
 }
 
-async function oauthRouter(fastify, options) {
+async function oauthRouter(fastify) {
 	fastify.decorateRequest('client_id', '');
 	fastify.decorateRequest('client_secret', '');
 	fastify.addHook('preHandler', authPreHandler);

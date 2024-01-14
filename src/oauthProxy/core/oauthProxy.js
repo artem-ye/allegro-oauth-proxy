@@ -1,8 +1,7 @@
-const UserModel = require('../db/model/UserModel');
 const AllegroOauthClient = require('./allegroOauthClient');
 const oauthDb = require('../db/oauthDb');
 
-STATUS_OK = 200;
+const STATUS_OK = 200;
 
 async function requestTokens({ client_id, client_secret }) {
 	const res = await AllegroOauthClient.withAuth({

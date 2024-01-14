@@ -29,7 +29,7 @@ const routes = [
 	},
 ];
 
-async function oauthAdminRouter(fastify, options) {
+async function oauthAdminRouter(fastify) {
 	fastify.addHook('preHandler', async (req, res) => {
 		const authToken = req.headers.authorization;
 		const rootToken = config.api.root_token;

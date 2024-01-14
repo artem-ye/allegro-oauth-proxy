@@ -2,7 +2,7 @@ const oauthDb = require('../db/oauthDb');
 
 const parseAuthHeader = (authorization) => {
 	if (!authorization) return;
-	if (!typeof authorization === 'string') return false;
+	if (typeof authorization !== 'string') return false;
 	if (!authorization.startsWith('Basic')) return false;
 
 	const credentials = authorization.split(' ')[1];
