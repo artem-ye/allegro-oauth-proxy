@@ -1,5 +1,7 @@
 env:
+    jest/globals: true
     browser: true
+    node: true
     commonjs: true
     es2021: true
 extends: eslint:recommended
@@ -8,7 +10,9 @@ parserOptions:
 rules:
     indent:
         - error
-        - space
+        - tab
+        # - 4
+        # - space
     linebreak-style:
         - error
         - unix
