@@ -5,6 +5,7 @@ const config = {
 		address: process.env.HTTP_ADDRESS || 'localhost',
 		port: process.env.HTTP_PORT || 3000,
 		logging: process.env.HTTP_LOGGING || false,
+		uri_prefix: process.env.URI_PREFIX || '',
 	},
 	mongo: {
 		url: process.env.MONGO_URL,
