@@ -14,5 +14,3 @@ test('routes items is objects', () => {
 		expect(typeof routeObj.options === 'object').toBeTruthy();
 	}
 });
-
-console.log(routes);
